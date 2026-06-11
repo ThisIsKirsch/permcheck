@@ -1,0 +1,103 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>permcheck — know the moment a trusted Mac app changes owners</title>
+<meta name="description" content="A menu-bar tool that alerts you when an installed Mac app's developer identity or signing certificate changes. One-time purchase, local-only." />
+<style>
+  :root{
+    --bg:#0b0c10; --panel:#15171f; --ink:#f4f5f7; --muted:#9aa0ab;
+    --accent:#ff5a4d; --accent2:#ffd23f; --line:#262936; --ok:#34d399;
+  }
+  *{box-sizing:border-box}
+  html,body{margin:0}
+  body{
+    background:radial-gradient(1200px 600px at 70% -10%, #1c1f2b 0%, var(--bg) 55%);
+    color:var(--ink); font:16px/1.6 -apple-system,BlinkMacSystemFont,"SF Pro Text",Inter,system-ui,sans-serif;
+    -webkit-font-smoothing:antialiased; min-height:100vh;
+  }
+  .wrap{max-width:720px; margin:0 auto; padding:64px 24px 96px}
+  .badge{display:inline-flex; gap:8px; align-items:center; font-size:13px; color:var(--muted);
+    border:1px solid var(--line); padding:6px 12px; border-radius:999px; margin-bottom:28px}
+  .dot{width:7px;height:7px;border-radius:50%;background:var(--accent)}
+  h1{font-size:clamp(30px,6vw,46px); line-height:1.1; letter-spacing:-.02em; margin:0 0 18px;
+    font-weight:680}
+  h1 .hl{color:var(--accent2)}
+  .sub{font-size:19px; color:var(--muted); margin:0 0 36px; max-width:58ch}
+  .card{background:var(--panel); border:1px solid var(--line); border-radius:18px; padding:26px}
+  .story{font-size:15px; color:var(--muted); border-left:3px solid var(--accent); padding-left:16px; margin:0 0 26px}
+  .price{display:flex; align-items:baseline; gap:10px; margin:0 0 6px}
+  .price b{font-size:32px; letter-spacing:-.02em}
+  .price s{color:var(--muted)}
+  .price .tag{font-size:13px; color:var(--ok)}
+  form{display:flex; gap:10px; margin:18px 0 10px; flex-wrap:wrap}
+  input[type=email]{flex:1 1 240px; background:#0e0f15; border:1px solid var(--line); color:var(--ink);
+    padding:14px 16px; border-radius:12px; font-size:16px}
+  input[type=email]:focus{outline:none; border-color:var(--accent2)}
+  button{background:var(--accent); color:#fff; border:0; padding:14px 22px; border-radius:12px;
+    font-size:16px; font-weight:640; cursor:pointer}
+  button:hover{filter:brightness(1.08)}
+  .fine{font-size:13px; color:var(--muted); margin:8px 2px 0}
+  ul.feat{list-style:none; padding:0; margin:26px 0 0; display:grid; gap:12px}
+  ul.feat li{padding-left:26px; position:relative; color:#d7dae2}
+  ul.feat li::before{content:"→"; position:absolute; left:0; color:var(--accent2)}
+  .ok{display:none; color:var(--ok); font-weight:600; margin-top:6px}
+  footer{margin-top:40px; font-size:13px; color:var(--muted)}
+</style>
+</head>
+<body>
+  <main class="wrap">
+    <h1>Know the moment a <span class="hl">trusted Mac app</span> changes owners.</h1>
+    <p class="sub">permcheck snapshots the developer identity and signing certificate of every app you've installed — and pings you the instant one quietly changes hands.</p>
+
+    <div class="card">
+      <p class="story">In 2024, Bartender was silently sold to an analytics company. It kept its screen-recording permissions and pushed an update signed by a brand-new developer. macOS said nothing. The only tool that caught it shut down in January 2026.</p>
+
+      <div class="price"><b>$15</b><s>one-time</s><span class="tag">· no subscription · local-only · no cloud</span></div>
+
+      <!-- TODO before launch: create a free form at formspree.io and paste your endpoint into FORM_ENDPOINT in the script below. -->
+      <form id="f" onsubmit="return done(event)">
+        <input type="email" id="email" name="email" placeholder="you@email.com" required />
+        <button type="submit">Get early access</button>
+      </form>
+      <p class="ok" id="ok">✓ You're on the list. I'll email when there's a build to try.</p>
+      <p class="fine">No charge today. Reserve your copy; pay only at launch if you still want it.</p>
+
+      <ul class="feat">
+        <li>Alerts when an installed app's developer ID or certificate changes</li>
+        <li>Flags apps that hold sensitive permissions (screen recording, accessibility, full disk access)</li>
+        <li>Runs quietly in your menu bar — checks happen on-device, nothing leaves your Mac</li>
+      </ul>
+    </div>
+
+    <footer>permcheck is an early concept. This page measures interest before anything is built. Reply to the launch email with "not interested" to be removed anytime.</footer>
+  </main>
+
+  <!--
+    EMAIL CAPTURE: this POSTs to Formspree (free tier, 50 submissions/mo — enough for a 48h test).
+    1. Sign up at formspree.io, create a form, copy its endpoint (looks like https://formspree.io/f/abcdwxyz).
+    2. Paste it into FORM_ENDPOINT below. That's it — submissions land in your Formspree inbox + email.
+    Until you set a real endpoint, the form just shows the success state without storing anything.
+  -->
+  <script>
+    const FORM_ENDPOINT = "";  // <-- paste your Formspree endpoint here before going live
+    async function done(e){
+      e.preventDefault();
+      const email = document.getElementById('email').value;
+      if (FORM_ENDPOINT) {
+        try {
+          await fetch(FORM_ENDPOINT, {
+            method: 'POST',
+            headers: { 'Accept': 'application/json', 'Content-Type': 'application/json' },
+            body: JSON.stringify({ email })
+          });
+        } catch (_) { /* show success regardless; smoke test cares about intent */ }
+      }
+      document.getElementById('f').style.display='none';
+      document.getElementById('ok').style.display='block';
+      return false;
+    }
+  </script>
+</body>
+</html>
