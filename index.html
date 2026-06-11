@@ -56,7 +56,6 @@
 
       <div class="price"><b>$15</b><s>one-time</s><span class="tag">· no subscription · local-only · no cloud</span></div>
 
-      <!-- TODO before launch: create a free form at formspree.io and paste your endpoint into FORM_ENDPOINT in the script below. -->
       <form id="f" onsubmit="return done(event)">
         <input type="email" id="email" name="email" placeholder="you@email.com" required />
         <button type="submit">Get early access</button>
@@ -74,14 +73,8 @@
     <footer>permcheck is an early concept. This page measures interest before anything is built. Reply to the launch email with "not interested" to be removed anytime.</footer>
   </main>
 
-  <!--
-    EMAIL CAPTURE: this POSTs to Formspree (free tier, 50 submissions/mo — enough for a 48h test).
-    1. Sign up at formspree.io, create a form, copy its endpoint (looks like https://formspree.io/f/abcdwxyz).
-    2. Paste it into FORM_ENDPOINT below. That's it — submissions land in your Formspree inbox + email.
-    Until you set a real endpoint, the form just shows the success state without storing anything.
-  -->
   <script>
-    const FORM_ENDPOINT = "";  // <-- paste your Formspree endpoint here before going live
+    const FORM_ENDPOINT = "https://formspree.io/f/mojzkjjb";
     async function done(e){
       e.preventDefault();
       const email = document.getElementById('email').value;
