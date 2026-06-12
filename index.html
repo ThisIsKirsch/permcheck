@@ -78,12 +78,16 @@
     async function done(e){
       e.preventDefault();
       const email = document.getElementById('email').value;
+      // Attribute each signup to its channel via ?src= (or utm_source). Lets the
+      // smoke test read which audience converts, not just the aggregate count.
+      const p = new URLSearchParams(location.search);
+      const source = p.get('src') || p.get('utm_source') || 'direct';
       if (FORM_ENDPOINT) {
         try {
           await fetch(FORM_ENDPOINT, {
             method: 'POST',
             headers: { 'Accept': 'application/json', 'Content-Type': 'application/json' },
-            body: JSON.stringify({ email })
+            body: JSON.stringify({ email, source, referrer: document.referrer || 'none' })
           });
         } catch (_) { /* show success regardless; smoke test cares about intent */ }
       }
